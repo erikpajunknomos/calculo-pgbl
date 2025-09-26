@@ -2,5 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
-body { @apply bg-[#f4ece6]; }
+/* Paleta Nomos */
+:root{
+  --ink: #021e19;
+  --lime: #c8e05b;
+  --paper: #f4ece6;
+  --gray: #a6a797;
+}
+
+html, body {
+  background: var(--paper);
+}
+
+/* Evita tooltip do Recharts ficar atrás de outros elementos */
+.recharts-tooltip-wrapper {
+  z-index: 40;
+}
