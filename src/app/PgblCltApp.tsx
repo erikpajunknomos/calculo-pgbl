@@ -21,7 +21,8 @@ import {
 const fmtBRL = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const fmtPct = (v: number) => `${(v * 100).toFixed(2)}%`;
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
-const fmtNumber = (n: number, min = 0, max = 6) => n.toLocaleString("pt-BR", { minimumFractionDigits: min, maximumFractionDigits: max });
+const fmtNumber = (n: number, min = 0, max = 6) =>
+  n.toLocaleString("pt-BR", { minimumFractionDigits: min, maximumFractionDigits: max });
 
 /* ===================== INSS / IR 2025 ===================== */
 const INSS_BANDS_2025: Array<{ upper: number; rate: number }> = [
@@ -157,31 +158,39 @@ export default function PgblCltApp() {
     return { arrReg, arrProg, custoEf } as const;
   }
 
-  const single = useMemo(() => buildProj(false, anosProj), [calc.pgblDed, calc.economia, anosProj, taxaReal, aliqProgResgate]);
-  const rec = useMemo(() => buildProj(true, anosProj), [calc.pgblDed, calc.economia, anosProj, taxaReal, aliqProgResgate]);
+  const single = useMemo(
+    () => buildProj(false, anosProj),
+    [calc.pgblDed, calc.economia, anosProj, taxaReal, aliqProgResgate]
+  );
+  const rec = useMemo(
+    () => buildProj(true, anosProj),
+    [calc.pgblDed, calc.economia, anosProj, taxaReal, aliqProgResgate]
+  );
 
   const rows = useMemo(
-    () => single.arrReg.map((r, i) => ({
-      label: r.ano,
-      aporteBruto: r.aporteBruto,
-      restituicaoBruta: r.restBruta,
-      totalLiqReg: r.total,
-      totalLiqProg: single.arrProg[i]?.total ?? 0,
-      aliqReg: r.aliqReg,
-      aliqProg: clamp(aliqProgResgate, 0, 0.4),
-    })),
+    () =>
+      single.arrReg.map((r, i) => ({
+        label: r.ano,
+        aporteBruto: r.aporteBruto,
+        restituicaoBruta: r.restBruta,
+        totalLiqReg: r.total,
+        totalLiqProg: single.arrProg[i]?.total ?? 0,
+        aliqReg: r.aliqReg,
+        aliqProg: clamp(aliqProgResgate, 0, 0.4),
+      })),
     [single, aliqProgResgate]
   );
   const rowsRec = useMemo(
-    () => rec.arrReg.map((r, i) => ({
-      label: r.ano,
-      aporteBruto: r.aporteBruto,
-      restituicaoBruta: r.restBruta,
-      totalLiqReg: r.total,
-      totalLiqProg: rec.arrProg[i]?.total ?? 0,
-      aliqReg: r.aliqReg,
-      aliqProg: clamp(aliqProgResgate, 0, 0.4),
-    })),
+    () =>
+      rec.arrReg.map((r, i) => ({
+        label: r.ano,
+        aporteBruto: r.aporteBruto,
+        restituicaoBruta: r.restBruta,
+        totalLiqReg: r.total,
+        totalLiqProg: rec.arrProg[i]?.total ?? 0,
+        aliqReg: r.aliqReg,
+        aliqProg: clamp(aliqProgResgate, 0, 0.4),
+      })),
     [rec, aliqProgResgate]
   );
 
@@ -191,11 +200,22 @@ export default function PgblCltApp() {
       <div className="mx-auto max-w-7xl">
         <header className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#021e19]">IR + Previdência (PGBL) — CLT</h1>
-            <p className="text-slate-600">Exercício 2026 · Ano-calendário 2025 — estimativa educativa</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#021e19]">
+              IR + Previdência (PGBL) — CLT
+            </h1>
+            <p className="text-slate-600">
+              Exercício 2026 · Ano-calendário 2025 — estimativa educativa
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <a href="https://www27.receita.fazenda.gov.br/simulador-irpf/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm hover:opacity-90 bg-[#021e19] text-[#c8e05b] border border-[#021e19]">Simulação completa na Receita</a>
+            <a
+              href="https://www27.receita.fazenda.gov.br/simulador-irpf/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm hover:opacity-90 bg-[#021e19] text-[#c8e05b] border border-[#021e19]"
+            >
+              Simulação completa na Receita
+            </a>
           </div>
         </header>
 
@@ -205,79 +225,231 @@ export default function PgblCltApp() {
             <section className="rounded-2xl bg-white p-5 shadow border border-[#a6a797]">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
                 <div className="md:col-span-12">
-                  <TextInput label="Nome da simulação" value={nome} onChange={setNome} placeholder="Ex.: Exemplo Paulinho" />
+                  <TextInput
+                    label="Nome da simulação"
+                    value={nome}
+                    onChange={setNome}
+                    placeholder="Ex.: Exemplo Paulinho"
+                  />
                 </div>
                 <div className="md:col-span-4">
-                  <NumberInput label="Salário bruto mensal" value={salario} onChange={setSalario} prefix="R$" />
+                  <NumberInput
+                    label="Salário bruto mensal"
+                    value={salario}
+                    onChange={setSalario}
+                    prefix="R$"
+                  />
                 </div>
                 <div className="md:col-span-4">
-                  <NumberInput label="Meses trabalhados no ano" value={meses} onChange={(v) => setMeses(clamp(Math.round(v), 0, 12))} />
+                  <NumberInput
+                    label="Meses trabalhados no ano"
+                    value={meses}
+                    onChange={(v) => setMeses(clamp(Math.round(v), 0, 12))}
+                  />
                 </div>
                 <div className="md:col-span-4">
-                  <NumberInput label="13º salário (exclusivo)" value={decimo} onChange={setDecimo} prefix="R$" />
+                  <NumberInput
+                    label="13º salário (exclusivo)"
+                    value={decimo}
+                    onChange={setDecimo}
+                    prefix="R$"
+                  />
                 </div>
                 <div className="md:col-span-12">
-                  <Toggle label="Contribui para INSS/RPPS? (requerido p/ PGBL)" checked={contribInss} onChange={setContribInss} />
+                  <Toggle
+                    label="Contribui para INSS/RPPS? (requerido p/ PGBL)"
+                    checked={contribInss}
+                    onChange={setContribInss}
+                  />
                 </div>
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-12">
                 <div className="md:col-span-12">
-                  <NumberInput label="PGBL planejado" value={pgbl} onChange={setPgbl} prefix="R$" />
+                  <NumberInput
+                    label="PGBL planejado"
+                    value={pgbl}
+                    onChange={setPgbl}
+                    prefix="R$"
+                  />
                 </div>
                 <div className="md:col-span-12 rounded-xl border border-[#a6a797]/60 p-3">
                   <PgblProgress limit={calc.pgblLimite} value={pgbl} />
-                  <div className="mt-2 text-sm text-slate-700">
-                    Sugestão (12% da RBT): <strong>{fmtBRL(calc.pgblLimite)}</strong>
-                    <span className="ml-1 text-slate-500">— faltam <strong>{fmtBRL(Math.max(0, calc.pgblLimite - pgbl))}</strong></span>
+                  <div className="mt-2 text-sm text-slate-700 flex items-center justify-between gap-2 flex-wrap">
+                    <span>
+                      Sugestão (12% da RBT): <strong>{fmtBRL(calc.pgblLimite)}</strong>
+                      <span className="ml-1 text-slate-500">
+                        — faltam <strong>{fmtBRL(Math.max(0, calc.pgblLimite - pgbl))}</strong>
+                      </span>
+                    </span>
+                    {/* BOTÃO APLICAR 100% */}
+                    <button
+                      type="button"
+                      onClick={() => setPgbl(Math.max(0, calc.pgblLimite))}
+                      className="rounded-md bg-[#c8e05b] px-3 py-1 text-sm font-semibold text-[#021e19] hover:brightness-95 border border-[#a6a797]"
+                    >
+                      Aplicar 100%
+                    </button>
                   </div>
                 </div>
               </div>
 
               <div className="mt-4">
-                <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex w-full items-center justify-between rounded-xl border bg-white px-3 py-2 text-left">
-                  <span className="text-sm font-medium text-slate-700">Opções avançadas (bônus, PLR, dependentes, deduções, IRRF)</span>
-                  <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>›</span>
+                <button
+                  type="button"
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="flex w-full items-center justify-between rounded-xl border bg-white px-3 py-2 text-left"
+                >
+                  <span className="text-sm font-medium text-slate-700">
+                    Opções avançadas (bônus, PLR, dependentes, deduções, IRRF)
+                  </span>
+                  <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>
+                    ›
+                  </span>
                 </button>
               </div>
               {showAdvanced && (
                 <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <NumberInput label="Bônus/Outros tributáveis (anuais)" value={bonus} onChange={setBonus} prefix="R$" />
+                  <NumberInput
+                    label="Bônus/Outros tributáveis (anuais)"
+                    value={bonus}
+                    onChange={setBonus}
+                    prefix="R$"
+                  />
                   <NumberInput label="PLR (exclusivo)" value={plr} onChange={setPlr} prefix="R$" />
-                  <NumberInput label="Nº de dependentes" value={deps} onChange={(v) => setDeps(clamp(Math.round(v), 0, 20))} />
-                  <NumberInput label="Outras deduções anuais" value={deducoes} onChange={setDeducoes} prefix="R$" />
+                  <NumberInput
+                    label="Nº de dependentes"
+                    value={deps}
+                    onChange={(v) => setDeps(clamp(Math.round(v), 0, 20))}
+                  />
+                  <NumberInput
+                    label="Outras deduções anuais"
+                    value={deducoes}
+                    onChange={setDeducoes}
+                    prefix="R$"
+                  />
                   <div className="md:col-span-3 space-y-2 rounded-xl border p-3">
-                    <Toggle label="Calcular IRRF automaticamente" checked={usarIrrfAuto} onChange={setUsarIrrfAuto} />
-                    <div className="text-xs text-slate-600">IRRF estimado: <strong>{fmtBRL(irrfAuto)}</strong></div>
-                    {!usarIrrfAuto && <NumberInput label="IRRF retido no ano (manual)" value={irrfManual} onChange={setIrrfManual} prefix="R$" />}
+                    <Toggle
+                      label="Calcular IRRF automaticamente"
+                      checked={usarIrrfAuto}
+                      onChange={setUsarIrrfAuto}
+                    />
+                    <div className="text-xs text-slate-600">
+                      IRRF estimado: <strong>{fmtBRL(irrfAuto)}</strong>
+                    </div>
+                    {!usarIrrfAuto && (
+                      <NumberInput
+                        label="IRRF retido no ano (manual)"
+                        value={irrfManual}
+                        onChange={setIrrfManual}
+                        prefix="R$"
+                      />
+                    )}
                     <div className="pt-2 border-t">
-                      <Toggle label={`Incluir 1/3 de férias na base (IR + INSS) — ${fmtBRL(salario / 3)}`} checked={incluirFerias} onChange={setIncluirFerias} />
-                      <div className="text-xs text-slate-500">Simplificação: somamos {fmtBRL(salario / 3)} à RBT e calculamos INSS sobre esse valor quando ativado.</div>
+                      <Toggle
+                        label={`Incluir 1/3 de férias na base (IR + INSS) — ${fmtBRL(salario / 3)}`}
+                        checked={incluirFerias}
+                        onChange={setIncluirFerias}
+                      />
+                      <div className="text-xs text-slate-500">
+                        Simplificação: somamos {fmtBRL(salario / 3)} à RBT e calculamos INSS sobre
+                        esse valor quando ativado.
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
+
+              {/* ==================== NOVO CARD: Restituição estimada ==================== */}
+              <div className="mt-3 rounded-xl border border-[#a6a797]/60 bg-white p-4">
+                <div className="mb-1 flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-slate-700">Restituição estimada</h3>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                      contribInss
+                        ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                        : "bg-slate-100 text-slate-500 ring-1 ring-slate-200"
+                    }`}
+                    title={
+                      contribInss
+                        ? "Percentual aproximado sobre o aporte (alíquota marginal atual)"
+                        : "Sem direito à restituição"
+                    }
+                  >
+                    {contribInss ? `≈ ${(calc.aliqMarg * 100).toFixed(1)}% do aporte` : "0%"}
+                  </span>
+                </div>
+                <div
+                  className={`text-3xl font-extrabold tracking-tight ${
+                    contribInss ? "text-[#021e19]" : "text-slate-400"
+                  }`}
+                >
+                  {fmtBRL(restituicaoFinal)}
+                </div>
+                <p className={`mt-1 text-xs ${contribInss ? "text-slate-500" : "text-slate-400"}`}>
+                  {contribInss ? (
+                    <>
+                      com aporte de <span className="font-medium">{fmtBRL(calc.pgblDed)}</span>
+                    </>
+                  ) : (
+                    <>Sem direito à restituição (marque “Contribui para INSS/RPPS?” para habilitar)</>
+                  )}
+                </p>
+              </div>
+              {/* ======================================================================== */}
             </section>
           </div>
 
           {/* Direita */}
           <div className="md:col-span-8 space-y-4">
             <section className="rounded-2xl bg-white p-4 border border-[#a6a797]">
-              <div className="text-lg font-semibold text-[#021e19]">Invista {fmtBRL(calc.pgblDed)} → receba ~{fmtBRL(calc.economia)} (≈ {fmtPct(calc.aliqMarg)} do aporte)</div>
-              <div className="text-sm text-slate-600 mt-0.5">Por quê? O PGBL reduz a <em>base de cálculo</em> do IR em até <strong>12% da RBT</strong>. Menos base ⇒ menos imposto ⇒ maior restituição.</div>
+              <div className="text-lg font-semibold text-[#021e19]">
+                Invista {fmtBRL(calc.pgblDed)} → receba ~{fmtBRL(calc.economia)} (≈{" "}
+                {fmtPct(calc.aliqMarg)} do aporte)
+              </div>
+              <div className="text-sm text-slate-600 mt-0.5">
+                Por quê? O PGBL reduz a <em>base de cálculo</em> do IR em até{" "}
+                <strong>12% da RBT</strong>. Menos base ⇒ menos imposto ⇒ maior restituição.
+              </div>
             </section>
 
             <section className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <KPI title="Aportar agora (dedutível)" value={fmtBRL(calc.pgblDed)} subtitle={`Limite atual: ${fmtBRL(calc.pgblLimite)}`} />
-              <KPI title={`Projeção em ${anosProj} ${anosProj === 1 ? "ano" : "anos"} (regressivo)`} value={fmtBRL(rows[rows.length - 1]?.totalLiqReg ?? 0)} subtitle={`Aporte líquido após restituição: ${fmtBRL(Math.max(0, calc.pgblDed - calc.economia))}`} />
+              <KPI
+                title="Aportar agora (dedutível)"
+                value={fmtBRL(calc.pgblDed)}
+                subtitle={`Limite atual: ${fmtBRL(calc.pgblLimite)}`}
+              />
+              <KPI
+                title={`Projeção em ${anosProj} ${anosProj === 1 ? "ano" : "anos"} (regressivo)`}
+                value={fmtBRL(rows[rows.length - 1]?.totalLiqReg ?? 0)}
+                subtitle={`Aporte líquido após restituição: ${fmtBRL(
+                  Math.max(0, calc.pgblDed - calc.economia)
+                )}`}
+              />
             </section>
 
             <section className="rounded-2xl bg-white p-5 shadow border border-[#a6a797]">
               <h2 className="mb-4 text-lg font-semibold">Projeção da restituição ao longo do tempo</h2>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <NumberInput label="Horizonte (anos)" value={anosProj} onChange={(v) => setAnosProj(clamp(Math.round(v), 1, 40))} />
-                <NumberInput label="Taxa real a.a. (%)" value={taxaReal * 100} onChange={(v) => setTaxaReal(clamp(v / 100, -0.5, 2))} minDecimals={2} maxDecimals={2} />
-                <NumberInput label="Alíquota progressiva esperada no resgate (%)" value={aliqProgResgate * 100} onChange={(v) => setAliqProgResgate(clamp(v / 100, 0, 0.4))} minDecimals={2} maxDecimals={2} />
+                <NumberInput
+                  label="Horizonte (anos)"
+                  value={anosProj}
+                  onChange={(v) => setAnosProj(clamp(Math.round(v), 1, 40))}
+                />
+                <NumberInput
+                  label="Taxa real a.a. (%)"
+                  value={taxaReal * 100}
+                  onChange={(v) => setTaxaReal(clamp(v / 100, -0.5, 2))}
+                  minDecimals={2}
+                  maxDecimals={2}
+                />
+                <NumberInput
+                  label="Alíquota progressiva esperada no resgate (%)"
+                  value={aliqProgResgate * 100}
+                  onChange={(v) => setAliqProgResgate(clamp(v / 100, 0, 0.4))}
+                  minDecimals={2}
+                  maxDecimals={2}
+                />
               </div>
               <div className="mt-4 h-96 w-full min-w-0 overflow-visible">
                 <ProjectionChart rows={rows} />
@@ -285,7 +457,11 @@ export default function PgblCltApp() {
             </section>
 
             <section className="rounded-2xl bg-white p-4 border border-[#a6a797]">
-              <Toggle label="Ativar plano recorrente (repetir aporte + restituição a cada ano)" checked={recorrente} onChange={setRecorrente} />
+              <Toggle
+                label="Ativar plano recorrente (repetir aporte + restituição a cada ano)"
+                checked={recorrente}
+                onChange={setRecorrente}
+              />
             </section>
             {recorrente && (
               <section className="rounded-2xl bg-white p-5 shadow border border-[#a6a797]">
@@ -304,7 +480,12 @@ export default function PgblCltApp() {
               <KeyValue k="Base de cálculo do IR (com PGBL)" v={fmtBRL(calc.baseCom)} />
               <KeyValue k="Imposto devido (com PGBL)" v={fmtBRL(calc.impCom)} />
               <KeyValue k="IRRF (estimado)" v={fmtBRL(irrfEfetivo)} />
-              <div className="mt-2 rounded-xl bg-slate-50 p-3"><KeyValue k="Restituição (+) / Imposto a pagar (−)" v={fmtBRL(restituicaoFinal)} /></div>
+              <div className="mt-2 rounded-xl bg-slate-50 p-3">
+                <KeyValue
+                  k="Restituição (+) / Imposto a pagar (−)"
+                  v={fmtBRL(restituicaoFinal)}
+                />
+              </div>
             </section>
           </div>
         </div>
@@ -315,17 +496,30 @@ export default function PgblCltApp() {
 
 /* ===================== Gráfico ===================== */
 const CNP = { bg: "#f4ece6", ink: "#021e19", lime: "#c8e05b", bar: "#a6a797", prog: "#2f6df6" } as const;
-function fmtBRL_v(v: number) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+function fmtBRL_v(v: number) {
+  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
 function TooltipV2({ active, payload, label }: any) {
   if (!active || !payload) return null;
   const byKey: Record<string, number> = {};
-  payload.forEach((p: any) => { byKey[p.dataKey] = Number(p.value); });
+  payload.forEach((p: any) => {
+    byKey[p.dataKey] = Number(p.value);
+  });
   const raw = (payload[0] && payload[0].payload) || ({} as any);
   const aliqReg = typeof raw.aliqReg === "number" ? raw.aliqReg : undefined;
   const aliqProg = typeof raw.aliqProg === "number" ? raw.aliqProg : undefined;
   const pct = (x?: number) => (typeof x === "number" ? ` (${(x * 100).toFixed(0)}%)` : "");
   return (
-    <div style={{ background: "#fff", border: "1px solid #e6e0da", borderRadius: 12, padding: "12px 14px", boxShadow: "0 4px 12px rgba(0,0,0,.06)", maxWidth: 280 }}>
+    <div
+      style={{
+        background: "#fff",
+        border: "1px solid #e6e0da",
+        borderRadius: 12,
+        padding: "12px 14px",
+        boxShadow: "0 4px 12px rgba(0,0,0,.06)",
+        maxWidth: 280,
+      }}
+    >
       <div style={{ fontWeight: 700, marginBottom: 8 }}>{label}</div>
       <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 4 }}>Barras (bruto)</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 6 }}>
@@ -344,20 +538,70 @@ function TooltipV2({ active, payload, label }: any) {
     </div>
   );
 }
-function ProjectionChart({ rows }: { rows: Array<{ label: string; aporteBruto: number; restituicaoBruta: number; totalLiqReg: number; totalLiqProg: number; aliqReg?: number; aliqProg?: number; }>; }) {
+function ProjectionChart({
+  rows,
+}: {
+  rows: Array<{
+    label: string;
+    aporteBruto: number;
+    restituicaoBruta: number;
+    totalLiqReg: number;
+    totalLiqProg: number;
+    aliqReg?: number;
+    aliqProg?: number;
+  }>;
+}) {
   return (
-    <div style={{ background: CNP.bg, borderRadius: 16, padding: 12, border: "1px solid #e6e0da", overflow: "hidden" }}>
+    <div
+      style={{
+        background: CNP.bg,
+        borderRadius: 16,
+        padding: 12,
+        border: "1px solid #e6e0da",
+        overflow: "hidden",
+      }}
+    >
       <ResponsiveContainer width="100%" height={360}>
         <ComposedChart data={rows} margin={{ top: 12, right: 16, bottom: 8, left: 8 }}>
           <CartesianGrid stroke="#eee" vertical={false} />
           <XAxis dataKey="label" tick={{ fill: CNP.ink, fontSize: 12 }} />
-          <YAxis tick={{ fill: CNP.ink, fontSize: 12 }} tickFormatter={(v: any) => fmtBRL_v(Number(v)).replace(",00", "")} />
+          <YAxis
+            tick={{ fill: CNP.ink, fontSize: 12 }}
+            tickFormatter={(v: any) => fmtBRL_v(Number(v)).replace(",00", "")}
+          />
           <Tooltip content={<TooltipV2 />} cursor={{ fill: "rgba(2,30,25,0.06)" }} />
-          <Legend wrapperStyle={{ paddingTop: 8 }} formatter={(v: any) => ({ aporteBruto: "Aporte investido (bruto)", restituicaoBruta: "Restituição projetada (bruta)", totalLiqReg: "Total líquido (regressivo)", totalLiqProg: "Total líquido (progressivo)" } as any)[v] ?? v} />
+          <Legend
+            wrapperStyle={{ paddingTop: 8 }}
+            formatter={(v: any) =>
+              (
+                {
+                  aporteBruto: "Aporte investido (bruto)",
+                  restituicaoBruta: "Restituição projetada (bruta)",
+                  totalLiqReg: "Total líquido (regressivo)",
+                  totalLiqProg: "Total líquido (progressivo)",
+                } as any
+              )[v] ?? v
+            }
+          />
           <Bar dataKey="aporteBruto" stackId="b" fill={CNP.bar} radius={[6, 6, 0, 0]} />
           <Bar dataKey="restituicaoBruta" stackId="b" fill={CNP.lime} radius={[6, 6, 0, 0]} />
-          <Line type="monotone" dataKey="totalLiqReg" stroke={CNP.ink} strokeWidth={5} dot={false} activeDot={{ r: 7, fill: CNP.ink }} />
-          <Line type="monotone" dataKey="totalLiqProg" stroke={CNP.prog} strokeWidth={4} strokeDasharray="6 5" dot={false} activeDot={{ r: 6, stroke: "#fff", strokeWidth: 2, fill: CNP.prog }} />
+          <Line
+            type="monotone"
+            dataKey="totalLiqReg"
+            stroke={CNP.ink}
+            strokeWidth={5}
+            dot={false}
+            activeDot={{ r: 7, fill: CNP.ink }}
+          />
+          <Line
+            type="monotone"
+            dataKey="totalLiqProg"
+            stroke={CNP.prog}
+            strokeWidth={4}
+            strokeDasharray="6 5"
+            dot={false}
+            activeDot={{ r: 6, stroke: "#fff", strokeWidth: 2, fill: CNP.prog }}
+          />
         </ComposedChart>
       </ResponsiveContainer>
     </div>
@@ -389,25 +633,53 @@ function PgblProgress({ limit, value }: { limit: number; value: number }) {
   return (
     <div>
       <div className="flex items-center justify-between text-xs text-slate-600">
-        <span>Limite legal de dedução (12% da RBT): <strong>{fmtBRL(limit)}</strong></span>
+        <span>
+          Limite legal de dedução (12% da RBT): <strong>{fmtBRL(limit)}</strong>
+        </span>
       </div>
       <div className="mt-1 h-2 w-full rounded-full bg-slate-200">
         <div className="h-2 rounded-full bg-[#c8e05b]" style={{ width: pctStr }} />
       </div>
-      <div className="mt-1 text-xs text-slate-600">Faltam <strong>{fmtBRL(falta)}</strong> para atingir o máximo.</div>
+      <div className="mt-1 text-xs text-slate-600">
+        Faltam <strong>{fmtBRL(falta)}</strong> para atingir o máximo.
+      </div>
     </div>
   );
 }
-function NumberInput({ label, value, onChange, prefix, min, max, minDecimals, maxDecimals, hint }: { label: string; value: number; onChange: (n: number) => void; prefix?: string; min?: number; max?: number; minDecimals?: number; maxDecimals?: number; hint?: string; }) {
+function NumberInput({
+  label,
+  value,
+  onChange,
+  prefix,
+  min,
+  max,
+  minDecimals,
+  maxDecimals,
+  hint,
+}: {
+  label: string;
+  value: number;
+  onChange: (n: number) => void;
+  prefix?: string;
+  min?: number;
+  max?: number;
+  minDecimals?: number;
+  maxDecimals?: number;
+  hint?: string;
+}) {
   const [text, setText] = useState(() => fmtNumber(value));
-  useEffect(() => { setText(fmtNumber(value, minDecimals ?? 0, maxDecimals ?? 6)); }, [value, minDecimals, maxDecimals]);
+  useEffect(() => {
+    setText(fmtNumber(value, minDecimals ?? 0, maxDecimals ?? 6));
+  }, [value, minDecimals, maxDecimals]);
   function parseToNumber(t: string) {
     const cleaned = t.replace(/[^0-9.,-]/g, "");
     const normalized = cleaned.replace(/\.(?=.*\.)/g, "").replace(/\./g, "").replace(/,/g, ".");
     const n = Number(normalized);
     return Number.isFinite(n) ? n : value;
   }
-  function shouldDeferFormat(t: string) { return t === "" || t === "-" || /[.,]$/.test(t); }
+  function shouldDeferFormat(t: string) {
+    return t === "" || t === "-" || /[.,]$/.test(t);
+  }
   function formatFromText(t: string, n: number) {
     const m = t.match(/[.,]([0-9]*)$/);
     const decFromTyping = m ? m[1].length : 0;
@@ -417,7 +689,10 @@ function NumberInput({ label, value, onChange, prefix, min, max, minDecimals, ma
   }
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-sm leading-tight font-medium text-slate-700 flex items-center gap-1 break-words">{label}{hint ? <span title={hint} className="cursor-help text-slate-400">ⓘ</span> : null}</span>
+      <span className="text-sm leading-tight font-medium text-slate-700 flex items-center gap-1 break-words">
+        {label}
+        {hint ? <span title={hint} className="cursor-help text-slate-400">ⓘ</span> : null}
+      </span>
       <div className="flex items-center h-11 rounded-xl border bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-slate-300">
         {prefix ? <span className="mr-1 text-slate-500">{prefix}</span> : null}
         <input
@@ -439,11 +714,26 @@ function NumberInput({ label, value, onChange, prefix, min, max, minDecimals, ma
     </label>
   );
 }
-function TextInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (s: string) => void; placeholder?: string; }) {
+function TextInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (s: string) => void;
+  placeholder?: string;
+}) {
   return (
     <label className="flex flex-col gap-1">
       <span className="text-sm font-medium text-slate-700">{label}</span>
-      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="rounded-xl border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-slate-300" />
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="rounded-xl border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-slate-300"
+      />
     </label>
   );
 }
@@ -454,10 +744,16 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
       <button
         type="button"
         onClick={() => onChange(!checked)}
-        className={`relative ml-3 h-6 w-11 rounded-full transition ${checked ? "bg-[#c8e05b]" : "bg-slate-300"}`}
+        className={`relative ml-3 h-6 w-11 rounded-full transition ${
+          checked ? "bg-[#c8e05b]" : "bg-slate-300"
+        }`}
         aria-pressed={checked}
       >
-        <span className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition ${checked ? "translate-x-5" : "translate-x-0"}`} />
+        <span
+          className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition ${
+            checked ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
       </button>
     </label>
   );
